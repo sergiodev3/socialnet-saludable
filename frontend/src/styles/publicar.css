@@ -1,0 +1,83 @@
+.publicar-form-contenedor {
+  background: rgba(255,255,255,0.7);
+  border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(44, 62, 80, 0.18);
+  padding: 36px 28px 28px 28px;
+  margin: 32px auto 40px auto;
+  max-width: 520px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: none;
+  backdrop-filter: blur(8px);
+  position: relative;
+}
+.publicar-form-contenedor::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #e0f2f1 0%, #f9fafb 100%);
+  opacity: 0.5;
+  z-index: 0;
+}
+.publicar-form-contenedor h2 {
+  margin-bottom: 18px;
+  color: #15803d;
+  font-size: 1.4em;
+  text-align: center;
+  letter-spacing: 0.5px;
+  z-index: 1;
+  position: relative;
+}
+.publicar-form-contenedor form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 1;
+  position: relative;
+}
+.publicar-form-contenedor textarea {
+  border-radius: 16px;
+  border: 1.5px solid #bdbdbd;
+  padding: 18px 18px 18px 22px;
+  font-size: 1.15em;
+  resize: vertical;
+  min-height: 90px;
+  background: rgba(249,250,251,0.95);
+  box-shadow: 0 4px 18px #e0f2f1;
+  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+  color: #222;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  margin-bottom: 2px;
+}
+.publicar-form-contenedor textarea:focus {
+  border: 2px solid #4ade80;
+  outline: none;
+  box-shadow: 0 6px 24px #bbf7d0;
+  background: #fff;
+}
+.publicar-form-contenedor input[type="file"] {
+  margin-bottom: 6px;
+  z-index: 1;
+  position: relative;
+}
+.publicar-form-contenedor button[type="submit"] {
+  background: linear-gradient(90deg, #4ade80 0%, #15803d 100%);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 0;
+  font-size: 1.12em;
+  font-weight: bold;
+  box-shadow: 0 2px 12px #bbf7d0;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  z-index: 1;
+  position: relative;
+}
+.publicar-form-contenedor button[type="submit"]:hover {
+  background: linear-gradient(90deg, #15803d 0%, #4ade80 100%);
+  box-shadow: 0 4px 20px #4ade80;
+}
