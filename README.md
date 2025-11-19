@@ -152,10 +152,11 @@ Crea un archivo `.env` en la carpeta `backend/` con las siguientes variables:
 PORT=5000
 NODE_ENV=development
 
-# Base de datos
+# Base de datos MongoDB
 MONGODB_URI=mongodb://localhost:27017/socialnet-saludable
-# O usar MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://usuario:password@cluster.mongodb.net/socialnet-saludable
+
+# Para MongoDB Atlas, usa el siguiente formato:
+# MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>
 
 # JWT
 JWT_SECRET=tu_clave_secreta_super_segura_aqui
