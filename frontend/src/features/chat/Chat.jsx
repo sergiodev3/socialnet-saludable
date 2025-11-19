@@ -1,6 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../../shared/components/Navbar';
 import '../../styles/chat.css';
+
+// Función para obtener URL completa de imágenes de perfil
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return null;
+  if (imagePath.startsWith('http') || imagePath.startsWith('blob:')) return imagePath;
+  return `http://localhost:3000${imagePath}`;
+};
 
 const Chat = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -75,7 +83,9 @@ const Chat = () => {
   };
 
   return (
-    <div className="chat-container" style={{position:'relative'}}>
+    <div>
+      <Navbar />
+      <div className="chat-container" style={{position:'relative'}}>
       {/* Lista de usuarios */}
       <aside className="usuarios-lista" style={{position:'relative'}}>
         <button 
@@ -102,7 +112,16 @@ const Chat = () => {
             className={`usuario-item ${usuarioActivo?._id === u._id ? 'activo' : ''}`}
             onClick={() => setUsuarioActivo(u)}
           >
-            <img src={u.foto || '/default-profile.png'} alt={u.username} className="avatar" />
+            <img 
+              src={getImageUrl(u.profileImage) || '/default-profile.png'} 
+              alt={u.username} 
+              className="avatar"
+              onClick={(e) => {
+                e.stopPropagation(); // Evitar que se active el chat
+                navigate(`/profile/${u._id}`);
+              }}
+              style={{ cursor: 'pointer' }}
+            />
             <span>{u.username}</span>
           </div>
         ))}
@@ -113,7 +132,13 @@ const Chat = () => {
         {usuarioActivo ? (
           <>
             <div className="chat-header">
-              <img src={usuarioActivo.foto || '/default-profile.png'} alt={usuarioActivo.username} className="avatar" />
+              <img 
+                src={getImageUrl(usuarioActivo.profileImage) || '/default-profile.png'} 
+                alt={usuarioActivo.username} 
+                className="avatar"
+                onClick={() => navigate(`/profile/${usuarioActivo._id}`)}
+                style={{ cursor: 'pointer' }}
+              />
               <span style={{fontWeight:'bold',fontSize:'1.1em'}}>{usuarioActivo.username}</span>
             </div>
             <div className="chat-mensajes" style={{display:'flex',flexDirection:'column'}}>
@@ -142,6 +167,7 @@ const Chat = () => {
           <div className="chat-placeholder">Selecciona un usuario para chatear</div>
         )}
       </section>
+      </div>
     </div>
   );
 };

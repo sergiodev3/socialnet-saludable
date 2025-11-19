@@ -1,11 +1,13 @@
 import express from 'express';
 import { createPost, getUserPosts, getAllPosts, reportItem, deletePost, updatePost } from './post.controller.js';
 import authMiddleware from '../../shared/middlewares/auth.middleware.js';
+// Usar almacenamiento en disco para guardar archivos en backend/upload/images-post
+import { uploadPost } from '../../shared/middlewares/upload.middleware.js';
 
 const router = express.Router();
 
-// Crear publicación (protegido)
-router.post('/', authMiddleware, createPost);
+// Crear publicación (protegido) - acepta un archivo con campo "image"
+router.post('/', authMiddleware, uploadPost.single('image'), createPost);
 // Obtener publicaciones de un usuario
 router.get('/user/:userId', getUserPosts);
 // Obtener todas las publicaciones

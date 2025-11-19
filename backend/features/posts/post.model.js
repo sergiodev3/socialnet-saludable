@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const postSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   mensaje: { type: String, required: true },
-  imagen: { type: String }, // URL o base64
+  // Ruta pública a la imagen guardada en disco (por ejemplo: /uploads/images-post/abc.jpg)
+  imagen: { type: String },
   createdAt: { type: Date, default: Date.now }
 });
 

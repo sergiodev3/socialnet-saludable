@@ -1,6 +1,8 @@
 .chat-container {
   display: flex;
   height: 80vh;
+  max-width: 75rem;
+  margin: 1rem auto;
   border-radius: 18px;
   overflow: hidden;
   background: linear-gradient(135deg, #e0f2f1 0%, #f9fafb 100%);

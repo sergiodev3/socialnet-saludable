@@ -1,93 +1,94 @@
-# 📱 Social Network CBTIS
+# Social Network CBTIS
 
-Proyecto de red social educativa creado con el stack **MERN** (MongoDB, Express, React, Node.js).  
-Actualmente implementa registro y autenticación de usuarios. Próximamente incluirá publicación de posts, perfil de usuario y chat en tiempo real.
+Red social desarrollada con React y Node.js para usuarios del CBTIS.
 
----
+## Características
 
-## 🚀 Tecnologías utilizadas
+- 📱 Perfil de usuario personalizable
+- 🎨 Modo premium con opciones de personalización
+- 🤖 Chat con IA integrado
+- 💾 Almacenamiento local de datos
 
-- **Frontend**: React + Vite
-- **Backend**: Node.js + Express
-- **Base de datos**: MongoDB (con Mongoose)
-- **Autenticación**: JSON Web Tokens (JWT)
+## Requisitos
 
----
+- Node.js v14 o superior
+- npm o yarn
 
-## 📁 Estructura del proyecto (es monorepo)
+## Instalación
+
+1. Clona el repositorio:
+```bash
+git clone https://github.com/tu-usuario/social-network-cbtis.git
+cd social-network-cbtis
 ```
-my-social-network/
-├── backend/
-│   ├── config/
-│   ├── features/
-│   │   ├── auth/
-│   │   ├── chat/
-│   │   └── posts/
-│   ├── shared/
-│   │   ├── middlewares/
-│   │   └── utils/
+
+2. Instala dependencias:
+```bash
+npm install
+```
+
+3. Crea archivo `.env` con tus variables:
+```
+REACT_APP_API_URL=http://localhost:5000
+```
+
+## Uso
+
+Ejecuta el servidor de desarrollo:
+```bash
+npm start
+```
+
+La aplicación se abrirá en [http://localhost:3000](http://localhost:3000)
+
+## Estructura del Proyecto
+
+```
 ├── frontend/
-│   ├── public/
-│   └── src/
-│       ├── assets/
-│       ├── features/
-│       │   ├── auth/
-│       │   ├── chat/
-│       │   ├── posts/
-│       │   └── profile/
-│       └── shared/
-│           ├── components/
-│           ├── hooks/
-│           └── utils/
+│   ├── src/
+│   │   ├── features/
+│   │   │   └── premium/
+│   │   │       ├── Formulario.jsx
+│   │   │       └── Personalizada.jsx
+│   │   ├── App.jsx
+│   │   └── index.js
+│   └── package.json
+├── backend/
+│   └── (agregar si existe)
 └── README.md
-
-
----
-
-## 🧩 Funcionalidades actuales
-
-- Registro de usuario
-- Login de usuario
-- Autenticación con JWT
-- Validación de credenciales
-
----
 ```
-## 🔌 API REST - Endpoints
 
-Base path: `/api/v1/users`
+## Scripts Disponibles
 
-| Método | Ruta          | Descripción                  | Requiere JWT |
-|--------|---------------|------------------------------|--------------|
-| POST   | `/register`   | Registro de nuevos usuarios  | ❌           |
-| POST   | `/login`      | Autenticación de usuarios    | ❌           |
+- `npm start` - Ejecuta el servidor de desarrollo
+- `npm run build` - Compila para producción
+- `npm test` - Ejecuta pruebas
+- `npm run dev` - Modo desarrollo con hot reload
 
----
+## Tecnologías
 
-## ⚙️ Configuración e instalación local
+- React 18+
+- React Router
+- Axios
+- localStorage API
 
-1. Clona este repositorio:
-   ```bash
-   git clone https://github.com/sergiodev3/social-network-cbtis.git
+## Contribuir
 
+1. Fork el proyecto
+2. Crea tu rama (`git checkout -b feature/AmazingFeature`)
+3. Commit cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre Pull Request
 
-2. Instala dependencias del frontend y backend:
-backend ----> bcryptjs cors dotenv express jsonwebtoken mongoose nodemon
-frontend ---> vite con react react-dom react-router-dom
+## Licencia
 
-🔄 Próximas funcionalidades (en desarrollo)
-Página principal con publicaciones
+Este proyecto está bajo licencia ISC.
 
-Perfil de usuario
+## Autor
 
-Chat en tiempo real con WebSockets
+Tu Nombre - [@tu-usuario](https://github.com/tu-usuario)
 
-CRUD de publicaciones
+## Contacto
 
-Mejoras en UI/UX
-
-🤝 Contribuciones
-Las contribuciones son bienvenidas. Por favor, abre un issue o un pull request para sugerir mejoras o reportar bugs.
-
-📄 Licencia
-Este proyecto está bajo la licencia MIT.
+- Email: tu-email@example.com
+- GitHub: [@tu-usuario](https://github.com/tu-usuario)

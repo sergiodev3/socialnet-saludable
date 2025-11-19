@@ -39,6 +39,9 @@ const userSchema = new mongoose.Schema({
     required: false,
     maxlength: [20, 'El teléfono no debe exceder los 20 caracteres']
   }
+  ,
+  // Ruta pública a la imagen de perfil guardada en disco (por ejemplo: /uploads/images-profile/abc.jpg)
+  profileImage: { type: String }
 });
 
 // Middleware para hacer hash del password antes de guardar

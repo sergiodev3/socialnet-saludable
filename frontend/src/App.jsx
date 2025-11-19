@@ -7,7 +7,11 @@ import MainPage from './features/home/MainPage';
 // import Comentarios from './features/home/comentarios.jsx'; // Archivo no existe
 import Chat from './features/chat/Chat';
 import Profile from './features/profile/Profile';
-import Pagina from './features/home/pagina';
+import Premium from './features/home/pagina';
+import Tarjeta from './features/premium/Tarjeta';
+import Formulario from './features/premium/Formulario';
+import Personalizada from './features/premium/Personalizada';
+
 
 function App() {
   return (
@@ -70,7 +74,16 @@ function App() {
         />
 
         {/* Ruta pública para la página de salud integral */}
-        <Route path="/pagina" element={<Pagina />} />
+        <Route path="/Premium" element={<Premium />} />
+
+        {/* Ruta para Tarjeta */}
+        <Route path="/tarjeta" element={<Tarjeta />} />
+
+        {/* Ruta para Formulario */}
+        <Route path="/formulario" element={<Formulario />} />
+
+        {/* Ruta para Personalizada */}
+        <Route path="/personalizada" element={<Personalizada />} />
 
         {/* Redirección por defecto */}
         <Route path="*" element={<Navigate to="/" />} />

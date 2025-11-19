@@ -1,0 +1,237 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #f5ede2 0%, #f7eedb 100%);
+  margin: 0;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  color: #333;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+.personalizada-container {
+  width: 100%;
+  max-width: 100%;
+  padding-bottom: 2rem;
+}
+
+header {
+  background: white;
+  width: 100%;
+  max-width: 56.25rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+  font-size: clamp(1.5rem, 5vw, 1.75rem);
+}
+
+.header-subtitle {
+  color: #666;
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  margin: 0;
+}
+
+.usuario-nombre {
+  font-weight: 600;
+  color: #B68A57;
+}
+
+.main-container {
+  width: 100%;
+  max-width: 56.25rem;
+  margin: 0 auto;
+  padding: 0 0.5rem;
+}
+
+.resumen-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.25rem;
+  border-left: 4px solid #B68A57;
+}
+
+.resumen-card h3 {
+  margin: 0 0 0.75rem 0;
+  color: #2c3e50;
+  font-size: clamp(0.9375rem, 2.5vw, 1rem);
+  text-transform: uppercase;
+  letter-spacing: 0.03125rem;
+}
+
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.75rem;
+}
+
+.resumen-item {
+  background: #f7eedb;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: clamp(0.8125rem, 2vw, 0.875rem);
+}
+
+.resumen-label {
+  color: #666;
+  font-size: clamp(0.6875rem, 1.5vw, 0.75rem);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.resumen-valor {
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: clamp(0.875rem, 2vw, 1rem);
+}
+
+.secciones-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.875rem;
+}
+
+.seccion-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 0.875rem;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+  border-top: 4px solid #B68A57;
+}
+
+.seccion-card.salud { border-top-color: #ff6b6b; }
+.seccion-card.nutricion { border-top-color: #51cf66; }
+.seccion-card.belleza { border-top-color: #ffa94d; }
+.seccion-card.estilo { border-top-color: #DDB892; }
+.seccion-card.modales { border-top-color: #B68A57; }
+.seccion-card.energia { border-top-color: #ec4899; }
+
+.seccion-title {
+  font-size: clamp(0.9375rem, 2.5vw, 1rem);
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 0.75rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.consejos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.consejo {
+  background: #f9f9f9;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border-left: 3px solid #B68A57;
+  font-size: clamp(0.8125rem, 2vw, 0.875rem);
+  line-height: 1.5;
+  color: #555;
+}
+
+.consejo.importante {
+  background: #fff3cd;
+  border-left-color: #ffc107;
+  color: #856404;
+  font-weight: 500;
+}
+
+.consejo.exito {
+  background: #d4edda;
+  border-left-color: #28a745;
+  color: #155724;
+}
+
+.no-data {
+  background: #f0f0f0;
+  padding: 1.25rem;
+  border-radius: 0.625rem;
+  text-align: center;
+  color: #666;
+  font-size: clamp(0.875rem, 2vw, 1rem);
+}
+
+footer {
+  margin-top: 1.875rem;
+  text-align: center;
+  color: #999;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+}
+
+.btn-back {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding: 0.625rem 1rem;
+  background: linear-gradient(135deg, #B68A57 0%, #DDB892 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-size: clamp(0.8125rem, 2vw, 0.875rem);
+  transition: 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-back:hover {
+  opacity: 0.9;
+  transform: translateY(-0.125rem);
+}
+
+/* RESPONSIVE MEDIA QUERIES */
+@media (max-width: 768px) {
+  body {
+    padding: 0.5rem;
+  }
+
+  header {
+    padding: 1rem;
+  }
+
+  .main-container {
+    padding: 0;
+  }
+
+  .secciones-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .resumen-grid {
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .resumen-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .seccion-card {
+    padding: 1rem;
+  }
+
+  .resumen-card {
+    padding: 1rem;
+  }
+}

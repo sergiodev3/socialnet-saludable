@@ -2,9 +2,12 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-image: url('../assets/img/diseño.png');
     background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
     margin: 0;
     padding: 0;
     color: #333;
+    min-height: 100vh;
 }
 
 /* Navbar */
@@ -100,7 +103,7 @@ body {
 
 /* Contenedor principal */
 .contenedor {
-    max-width: 600px;
+    max-width: 56rem;
     margin: auto;
     background: #ffffffcc;
     border-radius: 15px;
@@ -152,7 +155,7 @@ button:hover {
 
 /* Feed de publicaciones */
 .feed {
-    max-width: 600px;
+    max-width: 56rem;
     margin: auto;
 }
 

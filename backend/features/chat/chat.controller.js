@@ -4,7 +4,7 @@ import User from '../auth/auth.model.js';
 // Obtener todos los usuarios excepto el autenticado
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find({ _id: { $ne: req.user.userId } }, 'username _id');
+    const users = await User.find({ _id: { $ne: req.user.userId } }, 'username _id profileImage');
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener usuarios', error: error.message });

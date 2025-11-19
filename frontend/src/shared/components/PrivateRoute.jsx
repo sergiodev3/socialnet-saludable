@@ -9,11 +9,11 @@ const PrivateRoute = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.dispatchEvent(new Event('storage')); // Notifica a useAuth
-    navigate('/login');
+    navigate('/');
   };
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   return children;

@@ -1,14 +1,34 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import Navbar from '../../shared/components/Navbar';
 import chatImg from '../../assets/img/chat.jpeg';
 import paginaImg from '../../assets/img/pagina.jpeg';
 import '../../styles/diario.css';
 import profileImg from '../../assets/img/perfil.jpeg';
+
+// Función para obtener la URL completa de imágenes
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return null;
+  if (imagePath.startsWith('http') || imagePath.startsWith('blob:')) return imagePath;
+  return `http://localhost:3000${imagePath}`;
+};
 
 const DiarioSaludable = () => {
     const [publicaciones, setPublicaciones] = useState([]);
     const [mensaje, setMensaje] = useState('');
     const [imagen, setImagen] = useState(null);
     const [error, setError] = useState('');
+    const { getUserFromToken } = { getUserFromToken: () => null }; // placeholder para obtener usuario
+    const user = (() => {
+      const token = localStorage.getItem('token');
+      if (!token) return null;
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload;
+      } catch {
+        return null;
+      }
+    })();
 
     // Cargar todas las publicaciones al montar
     useEffect(() => {
@@ -21,24 +41,54 @@ const DiarioSaludable = () => {
     const handleImagen = (e) => {
         const file = e.target.files[0];
         if (file) {
+            // Revocar preview anterior si existe para evitar fugas de memoria
+            if (imagen && imagen.preview) {
+                try { URL.revokeObjectURL(imagen.preview); } catch {}
+            }
             const url = URL.createObjectURL(file);
-            setImagen(url);
+            // Guardar el archivo real en state para enviarlo en FormData y preview en imagen
+            setImagen({ file, preview: url });
         }
     };
+
+    // Limpiar objectURL cuando el componente se desmonta o cambia la imagen
+    useEffect(() => {
+        return () => {
+            if (imagen && imagen.preview) {
+                try { URL.revokeObjectURL(imagen.preview); } catch {}
+            }
+        };
+    }, [imagen]);
 
     const publicar = async (e) => {
         e.preventDefault();
         if (mensaje.trim() !== '') {
             try {
                 const token = localStorage.getItem('token');
-                const res = await fetch('http://localhost:3000/api/v1/posts', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ mensaje, imagen }),
-                });
+                // Si hay imagen, enviar como multipart/form-data
+                let res;
+                if (imagen && imagen.file) {
+                    const formData = new FormData();
+                    formData.append('mensaje', mensaje);
+                    formData.append('image', imagen.file);
+                    res = await fetch('http://localhost:3000/api/v1/posts', {
+                        method: 'POST',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: formData,
+                    });
+                } else {
+                    // Sin imagen, enviar JSON
+                    res = await fetch('http://localhost:3000/api/v1/posts', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ mensaje }),
+                    });
+                }
                 if (!res.ok) throw new Error('Error al publicar');
                 const nueva = await res.json();
                 setPublicaciones([nueva, ...publicaciones]);
@@ -72,23 +122,20 @@ const DiarioSaludable = () => {
     return (
         <div>
             {/* NAVBAR */}
-            <header className="navbar header">
-                <h1>🌿 Diario de Bienestar</h1>
-                <p className="frase">"¿Cómo te sentiste hoy? Exprésalo. Libéralo. Ámate."</p>
-            </header>
+            <Navbar />
 
             {/* ICONOS DE NAVEGACIÓN */}
             <div className="iconos">
 
-                <a href="/chat" title="comunicate">
-                <img src={chatImg} alt="chat" />
- </a>
-                <a href="/pagina" title="Más información">
-                    <img src={paginaImg} alt="pagina" />
-                </a>
-                <a href="/profile" title="tu perfil">
-                    <img src={profileImg} alt="profile" />
-                    </a>
+                <Link to="/chat" title="comunicate">
+                  <img src={chatImg} alt="chat" loading="lazy" />
+                </Link>
+                <Link to="/Premium" title="Más información">
+                    <img src={paginaImg} alt="premium" loading="lazy" />
+                </Link>
+                <Link to="/profile" title="tu perfil">
+                    <img src={profileImg} alt="profile" loading="lazy" />
+                </Link>
             </div>
 
             {/* FORMULARIO DE PUBLICACIÓN */}
@@ -114,11 +161,13 @@ const DiarioSaludable = () => {
                     <div key={pub._id || i} className="publicacion">
                         <p><b>{pub.user?.username || 'Usuario'}</b></p>
                         <p>{pub.mensaje}</p>
-                        {pub.imagen && <img src={pub.imagen} alt="Publicación" className="img-publicacion" />}
+                        {pub.imagen && <img src={getImageUrl(pub.imagen)} alt="Publicación" className="img-publicacion" loading="lazy" />}
                         <p style={{ fontSize: '0.8em', color: '#888' }}>Fecha: {new Date(pub.createdAt).toLocaleString()}</p>
-                        <button className="btn-regresar" style={{ marginTop: 10, background: '#ffb3b3', color: '#a00' }} onClick={() => reportar(pub._id)}>
-                            Reportar publicación
-                        </button>
+                        {user && user.userId !== pub.user?._id && (
+                            <button className="btn-regresar" style={{ marginTop: 10, background: '#ffb3b3', color: '#a00' }} onClick={() => reportar(pub._id)}>
+                                Reportar publicación
+                            </button>
+                        )}
                     </div>
                 ))}
             </main>

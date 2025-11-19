@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../../shared/components/Navbar';
 import '../../styles/publicar.css';
 import { getUserFromToken } from '../../shared/hooks/jwt';
+
+// Función para obtener la URL completa de imágenes (convierte rutas relativas a URLs absolutas del backend)
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return null;
+  if (imagePath.startsWith('http') || imagePath.startsWith('blob:')) return imagePath;
+  // Si es una ruta relativa como /uploads/..., construir la URL completa del backend
+  return `http://localhost:3000${imagePath}`;
+};
 
 const Home = () => {
   const [publicaciones, setPublicaciones] = useState([]);
@@ -30,7 +39,8 @@ const Home = () => {
     const file = e.target.files[0];
     if (file) {
       const url = URL.createObjectURL(file);
-      setImagen(url);
+      // Guardar el archivo real en state para enviarlo en FormData y preview en imagen
+      setImagen({ file, preview: url });
     }
   };
 
@@ -39,14 +49,30 @@ const Home = () => {
     if (mensaje.trim() !== '') {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:3000/api/v1/posts', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ mensaje, imagen }),
-        });
+        // Si hay imagen, enviar como multipart/form-data
+        let res;
+        if (imagen && imagen.file) {
+          const formData = new FormData();
+          formData.append('mensaje', mensaje);
+          formData.append('image', imagen.file);
+          res = await fetch('http://localhost:3000/api/v1/posts', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          });
+        } else {
+          // Sin imagen, enviar JSON
+          res = await fetch('http://localhost:3000/api/v1/posts', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ mensaje }),
+          });
+        }
         if (!res.ok) throw new Error('Error al publicar');
         const nueva = await res.json();
         setPublicaciones([nueva, ...publicaciones]);
@@ -128,7 +154,8 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Feed de Publicaciones</h1>
+      <Navbar />
+      <h1 style={{ textAlign: 'center', color: '#15803d', marginTop: '1rem' }}>Feed de Publicaciones</h1>
       {/* FORMULARIO DE PUBLICACIÓN */}
       <div className="publicar-form-contenedor">
         <h2>💬 ¿Cómo te sentiste hoy?</h2>
@@ -161,7 +188,7 @@ const Home = () => {
             ) : (
               <>
                 <p>{pub.mensaje}</p>
-                {pub.imagen && <img src={pub.imagen} alt="Publicación" className="img-publicacion" />}
+                {pub.imagen && <img src={getImageUrl(pub.imagen)} alt="Publicación" className="img-publicacion" />}
                 <p style={{ fontSize: '0.8em', color: '#888' }}>Fecha: {new Date(pub.createdAt).toLocaleString()}</p>
                 {user && user.userId === pub.user?._id && (
                   <>
@@ -169,14 +196,19 @@ const Home = () => {
                     <button onClick={() => eliminar(pub._id)} style={{ marginTop: 10, background: '#ffd6d6', color: '#a00' }}>Eliminar</button>
                   </>
                 )}
-                <button className="btn-regresar" style={{ marginTop: 10, background: '#ffb3b3', color: '#a00' }} onClick={() => reportar(pub._id)}>
-                  Reportar publicación
-                </button>
+                {user && user.userId !== pub.user?._id && (
+                  <button className="btn-regresar" style={{ marginTop: 10, background: '#ffb3b3', color: '#a00' }} onClick={() => reportar(pub._id)}>
+                    Reportar publicación
+                  </button>
+                )}
               </>
             )}
           </div>
         ))}
       </main>
+      <button onClick={() => navigate('/Premium')} className="btn-premium">
+        Página
+      </button>
     </div>
   );
 };

@@ -60,7 +60,7 @@ const Login = () => {
           <input
             type="email"
             name="email"
-            placeholder="Correo electrónico"
+            placeholder="Correo institucional"
             value={formData.email}
             onChange={handleChange}
             required

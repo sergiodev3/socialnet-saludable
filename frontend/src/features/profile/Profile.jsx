@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Navbar from '../../shared/components/Navbar';
+
+// Función para obtener la URL completa de imágenes
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return null;
+  if (imagePath.startsWith('http') || imagePath.startsWith('blob:')) return imagePath;
+  return `http://localhost:3000${imagePath}`;
+};
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -93,17 +101,19 @@ const Profile = () => {
     if (!file) return;
     setFotoPreview(URL.createObjectURL(file));
     const formData = new FormData();
-    formData.append('foto', file);
+    formData.append('profileImage', file);
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/users/${user.userId}/foto`, {
+      // Enviar a la nueva ruta que espera 'profileImage' y guarda la ruta pública
+      const res = await fetch(`http://localhost:3000/api/v1/users/profile/photo`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
       if (!res.ok) throw new Error('Error al subir la foto');
       const data = await res.json();
-      setUser({ ...user, foto: data.foto });
+      // Backend devuelve profileImage (ruta pública)
+      setUser({ ...user, profileImage: data.profileImage || data.profileImage });
       setSuccess('Foto de perfil actualizada');
     } catch (err) {
       setError('No se pudo subir la foto');
@@ -153,18 +163,34 @@ const Profile = () => {
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>Cargando perfil...</div>;
 
+  // Verificar si es el perfil del usuario autenticado
+  let token = localStorage.getItem('token');
+  let currentUserId = null;
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      currentUserId = payload.userId;
+    } catch (err) {
+      console.error('Error decodificando token');
+    }
+  }
+  const isOwnProfile = currentUserId === user._id;
+
   // Mostrar los nuevos campos del usuario
   return (
-    <div className="contenedor">
-      <button onClick={() => navigate(-1)} style={{marginBottom: 16, background:'#b3d1ff', color:'#003366'}}>Regresar</button>
-      <h1>Perfil de usuario</h1>
-      {/* Botón para reportar usuario */}
-      <button className="btn-regresar" style={{background:'#ffb3b3', color:'#a00', marginBottom:20}} onClick={reportarUsuario}>Reportar usuario</button>
+    <div>
+      <Navbar />
+      <div className="contenedor" style={{ marginTop: '2rem' }}>
+      <h1 style={{ textAlign: 'center', color: '#15803d' }}>Perfil de usuario</h1>
+      {/* Botón para reportar usuario - solo si es otro usuario */}
+      {!isOwnProfile && (
+        <button className="btn-regresar" style={{background:'#ffb3b3', color:'#a00', marginBottom:20}} onClick={reportarUsuario}>Reportar usuario</button>
+      )}
       {/* Foto de perfil */}
       <div style={{marginBottom:20}}>
         <strong>Foto de perfil:</strong><br />
         <img
-          src={fotoPreview || user.foto || '/default-profile.png'}
+          src={getImageUrl(fotoPreview || user.profileImage || '/default-profile.png')}
           alt="Foto de perfil"
           style={{maxWidth:120, borderRadius:'50%', boxShadow:'0 2px 8px #bbf7d0'}}
         /><br />
@@ -218,15 +244,18 @@ const Profile = () => {
           return (
             <div key={pub._id || i} className="publicacion">
               <p>{pub.mensaje}</p>
-              {pub.imagen && <img src={pub.imagen} alt="Publicación" className="img-publicacion" />}
+              {pub.imagen && <img src={getImageUrl(pub.imagen)} alt="Publicación" className="img-publicacion" />}
               <p style={{fontSize:'0.8em',color:'#888'}}>Fecha: {new Date(pub.createdAt).toLocaleString()}</p>
-              <button className="btn-regresar" style={{marginTop:10, background:'#ffb3b3', color:'#a00'}} onClick={reportarPublicacion}>Reportar publicación</button>
+              {!isOwnProfile && (
+                <button className="btn-regresar" style={{marginTop:10, background:'#ffb3b3', color:'#a00'}} onClick={reportarPublicacion}>Reportar publicación</button>
+              )}
             </div>
           );
         })}
       </div>
-      {success && <p style={{ color: 'green' }}>{success}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green', textAlign: 'center' }}>{success}</p>}
+      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+      </div>
     </div>
   );
 };

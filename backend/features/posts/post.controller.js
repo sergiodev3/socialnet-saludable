@@ -15,8 +15,16 @@ const Report = mongoose.models.Report || mongoose.model('Report', reportSchema);
 // Crear una publicación
 export const createPost = async (req, res) => {
   try {
-    const { mensaje, imagen } = req.body;
+    // mensaje puede venir en body; la imagen puede venir como archivo en req.file (multer en disco)
+    const mensaje = req.body.mensaje;
     const userId = req.user.userId;
+
+    let imagen = req.body.imagen;
+    if (req.file && req.file.filename) {
+      // Guardar la ruta pública en la base de datos
+      imagen = `/uploads/images-post/${req.file.filename}`;
+    }
+
     const post = await Post.create({ user: userId, mensaje, imagen });
     res.status(201).json(post);
   } catch (error) {
@@ -70,6 +78,20 @@ export const deletePost = async (req, res) => {
     if (post.user.toString() !== userId) {
       return res.status(403).json({ message: 'No tienes permiso para eliminar esta publicación' });
     }
+    // Si la publicación tiene una imagen guardada en disco, intentar eliminarla
+    if (post.imagen && typeof post.imagen === 'string' && post.imagen.includes('/uploads/images-post/')) {
+      try {
+        const filename = post.imagen.split('/uploads/images-post/')[1];
+        const fs = await import('fs');
+        const path = await import('path');
+        const filePath = path.join(process.cwd(), 'backend', 'upload', 'images-post', filename);
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      } catch (err) {
+        // no bloqueamos la eliminación por error al borrar el fichero
+        console.warn('No se pudo borrar archivo de imagen:', err.message);
+      }
+    }
+
     await post.deleteOne();
     res.json({ message: 'Publicación eliminada' });
   } catch (error) {

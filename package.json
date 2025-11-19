@@ -16,6 +16,6 @@
     "axios": "^1.9.0"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.2.1"
   }
 }

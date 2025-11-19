@@ -1,12 +1,18 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import connectDB from './config/db.js';
 import { authRoutes } from './features/auth/index.js';
 import { chatRoutes } from './features/chat/index.js';
 import postRoutes from './features/posts/post.routes.js';
 import authMiddleware from './shared/middlewares/auth.middleware.js';
 import errorMiddleware from './shared/middlewares/error.middleware.js';
+
+// Obtener __dirname en módulos ES6
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Configurar dotenv
 dotenv.config();
@@ -17,7 +23,8 @@ const app = express();
 // Middlewares globales
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static('backend/uploads'));
+// Servir archivos subidos desde la carpeta upload (ruta absoluta)
+app.use('/uploads', express.static(path.join(__dirname, 'upload')));
 
 // Conexión a la base de datos
 connectDB();
