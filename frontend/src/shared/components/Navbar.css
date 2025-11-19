@@ -26,6 +26,7 @@
   font-weight: 700;
   font-size: clamp(1.125rem, 3vw, 1.5rem);
   transition: transform 0.2s ease;
+  position: relative;
 }
 
 .navbar-brand:hover {
@@ -38,6 +39,30 @@
 
 .brand-text {
   display: none;
+}
+
+.premium-badge {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: #1a1a1a;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  margin-left: 0.5rem;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+  animation: pulse-premium 2s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+@keyframes pulse-premium {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
+  }
 }
 
 .navbar-links {

@@ -40,7 +40,7 @@ const Profile = () => {
       }
       try {
         // Obtener datos del usuario
-        const resUser = await fetch(`http://localhost:3000/api/v1/users/${id}`);
+        const resUser = await fetch(`http://localhost:3000/api/v1/auth/${id}`);
         if (!resUser.ok) throw new Error('No se pudo cargar el usuario');
         const userData = await resUser.json();
         setUser(userData);
@@ -75,7 +75,7 @@ const Profile = () => {
     const token = localStorage.getItem('token');
     try {
       // Llama a tu backend para actualizar el username
-      const res = await fetch(`http://localhost:3000/api/v1/users/${user.userId}`, {
+      const res = await fetch(`http://localhost:3000/api/v1/auth/${user.userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ const Profile = () => {
     const token = localStorage.getItem('token');
     try {
       // Enviar a la nueva ruta que espera 'profileImage' y guarda la ruta pública
-      const res = await fetch(`http://localhost:3000/api/v1/users/profile/photo`, {
+      const res = await fetch(`http://localhost:3000/api/v1/auth/profile/photo`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

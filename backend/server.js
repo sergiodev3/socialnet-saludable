@@ -30,7 +30,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'upload')));
 connectDB();
 
 // Rutas públicas
-app.use('/api/v1/users', authRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 // Rutas de chat (protegidas)
 app.use('/api/v1/chat', chatRoutes);

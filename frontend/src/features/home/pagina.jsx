@@ -1,8 +1,89 @@
-import React from "react";
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../shared/components/Navbar';
 
 export default function PersonalizacionInfo() {
+  const [isPremium, setIsPremium] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const checkPremiumStatus = async () => {
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/api/v1/auth/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (response.ok) {
+          const userData = await response.json();
+          setIsPremium(userData.isPremium || false);
+        }
+      } catch (error) {
+        console.error('Error al verificar estado premium:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkPremiumStatus();
+  }, [token]);
+
+  if (loading) {
+    return (
+      <div style={styles.body}>
+        <Navbar />
+        <div style={styles.contenedor}>
+          <p>Cargando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si el usuario ya es premium, redirigir al formulario
+  if (isPremium) {
+    return (
+      <div style={styles.body}>
+        <Navbar />
+        <header style={styles.header}>
+          <h1 style={styles.h1}>¡Eres Usuario Premium! ⭐</h1>
+        </header>
+
+        <div style={styles.contenedor}>
+          <div style={{...styles.seccion, textAlign: 'center'}}>
+            <div style={styles.premiumCard}>
+              <h2 style={styles.h2}>✨ Estado Premium Activo ✨</h2>
+              <p style={styles.p}>
+                ¡Felicidades! Ya tienes acceso completo a todas las funcionalidades premium de Alther.
+              </p>
+              <div style={styles.tarjeta}>
+                <p>✓ Acceso a personalización avanzada</p>
+                <p>✓ Consejos únicos adaptados a ti</p>
+                <p>✓ Rutinas personalizadas de cuidado</p>
+                <p>✓ Soporte prioritario</p>
+              </div>
+              
+              <Link to="/formulario" style={styles.boton}>
+                Ir a Mi Perfil Personalizado 🎯
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <footer style={styles.footer}>
+          © 2025 Alther — Tu bienestar, tu ciencia.
+        </footer>
+      </div>
+    );
+  }
+
   return (
     <div style={styles.body}>
       <Navbar />
@@ -162,5 +243,13 @@ const styles = {
     marginTop: "3rem",
     fontSize: "0.85rem",
     color: "#6d6a67",
+  },
+
+  premiumCard: {
+    background: "linear-gradient(135deg, #FFD700 0%, #FFA500 100%)",
+    padding: "2rem",
+    borderRadius: "20px",
+    boxShadow: "0 8px 30px rgba(255, 215, 0, 0.3)",
+    color: "#1a1a1a",
   }
 };

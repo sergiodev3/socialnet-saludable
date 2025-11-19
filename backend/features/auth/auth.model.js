@@ -38,10 +38,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
     maxlength: [20, 'El teléfono no debe exceder los 20 caracteres']
-  }
-  ,
+  },
   // Ruta pública a la imagen de perfil guardada en disco (por ejemplo: /uploads/images-profile/abc.jpg)
-  profileImage: { type: String }
+  profileImage: { type: String },
+  // Indica si el usuario tiene suscripción premium activa
+  isPremium: {
+    type: Boolean,
+    default: false
+  },
+  premiumActivatedAt: {
+    type: Date,
+    default: null
+  }
 });
 
 // Middleware para hacer hash del password antes de guardar

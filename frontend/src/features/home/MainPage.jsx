@@ -18,6 +18,7 @@ const DiarioSaludable = () => {
     const [mensaje, setMensaje] = useState('');
     const [imagen, setImagen] = useState(null);
     const [error, setError] = useState('');
+    const [isPremium, setIsPremium] = useState(false);
     const { getUserFromToken } = { getUserFromToken: () => null }; // placeholder para obtener usuario
     const user = (() => {
       const token = localStorage.getItem('token');
@@ -36,6 +37,31 @@ const DiarioSaludable = () => {
             .then(res => res.json())
             .then(data => setPublicaciones(data))
             .catch(() => setError('Error al cargar publicaciones.'));
+    }, []);
+
+    // Verificar estado premium
+    useEffect(() => {
+        const checkPremiumStatus = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            try {
+                const response = await fetch('http://localhost:3000/api/v1/auth/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    setIsPremium(userData.isPremium || false);
+                }
+            } catch (error) {
+                console.error('Error al verificar estado premium:', error);
+            }
+        };
+
+        checkPremiumStatus();
     }, []);
 
     const handleImagen = (e) => {
@@ -130,9 +156,16 @@ const DiarioSaludable = () => {
                 <Link to="/chat" title="comunicate">
                   <img src={chatImg} alt="chat" loading="lazy" />
                 </Link>
-                <Link to="/Premium" title="Más información">
-                    <img src={paginaImg} alt="premium" loading="lazy" />
-                </Link>
+                {!isPremium && (
+                  <Link to="/Premium" title="Más información">
+                      <img src={paginaImg} alt="premium" loading="lazy" />
+                  </Link>
+                )}
+                {isPremium && (
+                  <Link to="/formulario" title="Mi Perfil Premium">
+                      <img src={paginaImg} alt="premium activo" loading="lazy" style={{border: '3px solid gold', borderRadius: '10px'}} />
+                  </Link>
+                )}
                 <Link to="/profile" title="tu perfil">
                     <img src={profileImg} alt="profile" loading="lazy" />
                 </Link>

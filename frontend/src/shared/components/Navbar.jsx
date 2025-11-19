@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css';
 
@@ -6,6 +6,33 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem('token');
+  const [isPremium, setIsPremium] = useState(false);
+  const [username, setUsername] = useState('');
+
+  // Obtener información del usuario
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!token) return;
+      
+      try {
+        const response = await fetch('http://localhost:3000/api/v1/auth/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (response.ok) {
+          const userData = await response.json();
+          setIsPremium(userData.isPremium || false);
+          setUsername(userData.username || '');
+        }
+      } catch (error) {
+        console.error('Error al obtener datos del usuario:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [token, location.pathname]); // Actualizar cuando cambie la ruta
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -21,6 +48,7 @@ const Navbar = () => {
         <Link to="/main" className="navbar-brand">
           <span className="brand-icon">🌿</span>
           <span className="brand-text">Alther</span>
+          {isPremium && <span className="premium-badge" title="Usuario Premium">⭐ Premium</span>}
         </Link>
 
         <div className="navbar-links">

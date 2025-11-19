@@ -19,6 +19,7 @@ const Home = () => {
   const [error, setError] = useState('');
   const [editandoId, setEditandoId] = useState(null);
   const [nuevoMensaje, setNuevoMensaje] = useState('');
+  const [isPremium, setIsPremium] = useState(false);
   const user = getUserFromToken();
   const navigate = useNavigate();
 
@@ -33,6 +34,31 @@ const Home = () => {
     fetchPosts();
     const interval = setInterval(fetchPosts, 5000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Verificar estado premium
+  useEffect(() => {
+    const checkPremiumStatus = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/v1/auth/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (response.ok) {
+          const userData = await response.json();
+          setIsPremium(userData.isPremium || false);
+        }
+      } catch (error) {
+        console.error('Error al verificar estado premium:', error);
+      }
+    };
+
+    checkPremiumStatus();
   }, []);
 
   const handleImagen = (e) => {
@@ -206,9 +232,16 @@ const Home = () => {
           </div>
         ))}
       </main>
-      <button onClick={() => navigate('/Premium')} className="btn-premium">
-        Página
-      </button>
+      {!isPremium && (
+        <button onClick={() => navigate('/Premium')} className="btn-premium">
+          Hazte Premium ✨
+        </button>
+      )}
+      {isPremium && (
+        <button onClick={() => navigate('/formulario')} className="btn-premium" style={{background: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)', color: '#1a1a1a'}}>
+          Mi Perfil Premium ⭐
+        </button>
+      )}
     </div>
   );
 };

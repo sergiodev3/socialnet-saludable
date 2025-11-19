@@ -103,7 +103,7 @@ export default function Tarjeta() {
     return Object.keys(newErrors).length === 0;
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setErrors({});
     setMensaje('');
 
@@ -115,16 +115,44 @@ export default function Tarjeta() {
       pagarBtnRef.current.textContent = 'Procesando...';
     }
 
-    setTimeout(() => {
+    try {
+      // Simular procesamiento de pago
+      await new Promise(resolve => setTimeout(resolve, 1400));
+      
+      // Activar premium en el backend
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/api/v1/auth/activate-premium', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Error al activar premium');
+      }
+
+      const data = await response.json();
+      
       if (pagarBtnRef.current) {
         pagarBtnRef.current.textContent = '✅ Pago Exitoso';
       }
-      setMensaje('Gracias por tu compra — Confirmación enviada.');
+      setMensaje('¡Felicidades! Ahora eres usuario Premium 🌟');
       
       setTimeout(() => {
         navigate('/formulario');
-      }, 1500);
-    }, 1400);
+      }, 2000);
+    } catch (error) {
+      console.error('Error al procesar pago:', error);
+      setMensaje('Error al procesar el pago. Intenta nuevamente.');
+      setLoading(false);
+      if (pagarBtnRef.current) {
+        pagarBtnRef.current.disabled = false;
+        pagarBtnRef.current.textContent = '💳 Pagar $20 MXN';
+      }
+    }
   };
 
   return (

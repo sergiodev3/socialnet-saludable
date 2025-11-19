@@ -50,3 +50,38 @@ export const login = async (req, res) => {
     res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
   }
 };
+
+// Controlador para activar premium
+export const activatePremium = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    
+    // Buscar el usuario
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    // Verificar si ya es premium
+    if (user.isPremium) {
+      return res.status(400).json({ message: 'El usuario ya tiene suscripción premium activa' });
+    }
+
+    // Activar premium
+    user.isPremium = true;
+    user.premiumActivatedAt = new Date();
+    await user.save();
+
+    res.status(200).json({ 
+      message: 'Suscripción premium activada con éxito',
+      user: { 
+        id: user._id, 
+        username: user.username, 
+        isPremium: user.isPremium,
+        premiumActivatedAt: user.premiumActivatedAt 
+      } 
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al activar premium', error: error.message });
+  }
+};

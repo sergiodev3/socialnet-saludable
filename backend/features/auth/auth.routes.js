@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login } from './auth.controller.js';
+import { register, login, activatePremium } from './auth.controller.js';
 import User from './auth.model.js';
 import authMiddleware from '../../shared/middlewares/auth.middleware.js';
 import { uploadProfile } from '../../shared/middlewares/upload.middleware.js';
@@ -11,6 +11,9 @@ router.post('/register', register);
 
 // Ruta para iniciar sesión
 router.post('/login', login);
+
+// Ruta para activar premium (requiere autenticación)
+router.post('/activate-premium', authMiddleware, activatePremium);
 
 // Ruta para obtener el perfil del usuario autenticado
 router.get('/profile', authMiddleware, async (req, res) => {
